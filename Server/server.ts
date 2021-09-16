@@ -1,24 +1,26 @@
+import "colors";
+import dotenv from "dotenv";
 import express, { Application, Request, Response } from "express";
+import Routes from './routes/index';
+
+// Load env vars
+dotenv.config({ path: "./config/config.env" });
 
 const app: Application = express();
-const port = 3000;
+const PORT = process.env.PORT;
 
 // Body parsing Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get(
-    "/",
-    async (req: Request, res: Response): Promise<Response> => {
-        return res.status(200).send({
-            message: "Express api with typescript wew",
-        });
-    }
-);
+// Initialize Routes
+app.use("/api/todo", Routes.Todo);
+
+
 
 try {
-    app.listen(port, (): void => {
-        console.log(`Connected successfully on port ${port}`);
+    app.listen(PORT, (): void => {
+        console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow);
     });
 } catch (error: any) {
     console.error(`Error occured: ${error.message}`);
